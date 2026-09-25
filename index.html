@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#6C4CF1" />
+  <title>مغامرة الرياضيات | الصف الأول الإعدادي</title>
+
+  <!-- Tailwind CSS (CDN). The app itself is a single HTML file. -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            arabic: ['Tahoma', 'Arial', 'sans-serif']
+          },
+          boxShadow: {
+            soft: '0 18px 50px rgba(75, 55, 145, .14)',
+            glow: '0 0 0 4px rgba(108, 76, 241, .12)'
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    :root{
+      --violet:#6C4CF1;
+      --violet2:#8D72FF;
+      --cyan:#27C8E8;
+      --mint:#35D6A0;
+      --yellow:#FFD75A;
+      --pink:#FF6FAE;
+      --ink:#202237;
+      --muted:#70758F;
+      --paper:#FFFFFF;
+      --bg:#F7F5FF;
+      --good:#159A6B;
+      --bad:#E3495B;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Tahoma,Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(39,200,232,.16), transparent 28%),
+        radial-gradient(circle at 90% 18%, rgba(255,111,174,.16), transparent 24%),
+        radial-gradient(circle at 50% 100%, rgba(108,76,241,.11), transparent 30%),
+        var(--bg);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    button, input{font:inherit}
+    button{-webkit-tap-highlight-color:transparent}
+    .screen{min-height:100vh}
+    .glass{
+      background:rgba(255,255,255,.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border:1px solid rgba(255,255,255,.82);
+      box-shadow:0 18px 50px rgba(75,55,145,.14);
+    }
+
+    .blob{
+      position:fixed;
+      border-radius:999px;
+      filter:blur(2px);
+      pointer-events:none;
+      opacity:.35;
+      z-index:-1;
+      animation:floaty 7s ease-in-out infinite;
+    }
+    .blob.one{width:180px;height:180px;background:#7F66FF;top:9%;right:-70px}
+    .blob.two{width:140px;height:140px;background:#2ED2ED;bottom:16%;left:-55px;animation-delay:-2s}
+    .blob.three{width:90px;height:90px;background:#FF7AB6;top:55%;right:6%;animation-delay:-4s}
+
+    @keyframes floaty{
+      0%,100%{transform:translateY(0) rotate(0)}
+      50%{transform:translateY(-18px) rotate(7deg)}
+    }
+
+    .fade-up{animation:fadeUp .58s cubic-bezier(.2,.8,.2,1) both}
+    @keyframes fadeUp{
+      from{opacity:0;transform:translateY(18px) scale(.985)}
+      to{opacity:1;transform:none}
+    }
+
+    .pop-in{animation:pop .45s cubic-bezier(.2,1.3,.35,1) both}
+    @keyframes pop{
+      0%{opacity:0;transform:scale(.86)}
+      100%{opacity:1;transform:scale(1)}
+    }
+
+    .shake{animation:shake .35s linear}
+    @keyframes shake{
+      0%,100%{transform:translateX(0)}
+      25%{transform:translateX(7px)}
+      50%{transform:translateX(-7px)}
+      75%{transform:translateX(4px)}
+    }
+
+    .hero-orb{
+      width:84px;height:84px;border-radius:28px;
+      display:grid;place-items:center;
+      background:linear-gradient(135deg,var(--violet),var(--violet2));
+      box-shadow:0 18px 38px rgba(108,76,241,.28);
+      color:white;font-size:40px;
+      transform:rotate(-6deg);
+    }
+
+    .field{
+      width:100%;
+      border:2px solid #E6E2F7;
+      background:#fff;
+      border-radius:18px;
+      padding:14px 16px;
+      outline:none;
+      transition:.2s ease;
+      color:var(--ink);
+    }
+    .field:focus{
+      border-color:var(--violet);
+      box-shadow:0 0 0 5px rgba(108,76,241,.1);
+    }
+
+    .main-btn{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:15px 20px;
+      font-weight:800;
+      color:#fff;
+      background:linear-gradient(135deg,var(--violet),#8063FF);
+      box-shadow:0 12px 28px rgba(108,76,241,.28);
+      transition:transform .16s ease, box-shadow .16s ease, opacity .16s ease;
+      cursor:pointer;
+    }
+    .main-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 16px 34px rgba(108,76,241,.34)}
+    .main-btn:active:not(:disabled){transform:translateY(1px) scale(.99)}
+    .main-btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+
+    .secondary-btn{
+      border:1.5px solid #E1DDF1;
+      background:#fff;
+      color:#474A63;
+      border-radius:16px;
+      padding:12px 16px;
+      font-weight:800;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+    .secondary-btn:hover{border-color:#C8BFF2;transform:translateY(-1px)}
+
+    .sound-btn{
+      width:44px;height:44px;border-radius:14px;border:1px solid #E6E1F6;
+      background:#fff;display:grid;place-items:center;
+      cursor:pointer;box-shadow:0 8px 20px rgba(43,37,83,.08);
+      transition:.18s ease;
+    }
+    .sound-btn:active{transform:scale(.94)}
+
+    .progress-shell{
+      height:13px;background:#ECE8FA;border-radius:999px;overflow:hidden;
+      position:relative;
+    }
+    .progress-bar{
+      height:100%;width:0%;
+      background:linear-gradient(90deg,var(--cyan),var(--violet),var(--pink));
+      border-radius:999px;
+      transition:width .45s cubic-bezier(.2,.8,.2,1);
+      position:relative;
+    }
+    .progress-bar::after{
+      content:"";
+      position:absolute;inset:0;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);
+      animation:shine 2.3s linear infinite;
+      transform:translateX(-100%);
+    }
+    @keyframes shine{to{transform:translateX(100%)}}
+
+    .question-card{
+      border-radius:28px;
+      background:#fff;
+      border:1px solid #EAE7F5;
+      box-shadow:0 18px 48px rgba(62,52,113,.11);
+      padding:22px;
+    }
+
+    .q-icon{
+      width:50px;height:50px;border-radius:17px;
+      background:linear-gradient(135deg,#EFEAFF,#F8F5FF);
+      color:var(--violet);
+      display:grid;place-items:center;
+      font-weight:900;
+      border:1px solid #E1D9FF;
+      flex:0 0 auto;
+    }
+
+    .option{
+      position:relative;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      width:100%;
+      min-height:58px;
+      padding:13px 14px;
+      border:2px solid #ECE9F7;
+      border-radius:18px;
+      background:#fff;
+      cursor:pointer;
+      transition:.18s cubic-bezier(.2,.8,.2,1);
+      user-select:none;
+      overflow:hidden;
+    }
+    .option:hover{
+      border-color:#CFC5FC;
+      background:#FBFAFF;
+      transform:translateY(-1px);
+    }
+    .option.selected{
+      border-color:var(--violet);
+      background:linear-gradient(135deg,#F2EEFF,#FCFAFF);
+      box-shadow:0 0 0 4px rgba(108,76,241,.08);
+      transform:translateY(-1px);
+    }
+    .option .dot{
+      width:24px;height:24px;border-radius:50%;
+      border:2px solid #CFC9E7;
+      display:grid;place-items:center;
+      transition:.18s ease;
+      flex:0 0 auto;
+    }
+    .option.selected .dot{
+      border-color:var(--violet);
+      background:var(--violet);
+      box-shadow:inset 0 0 0 5px #fff;
+    }
+
+    .navigator{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:8px;
+    }
+    .nav-dot{
+      height:42px;border:none;border-radius:13px;
+      background:#F0EDF9;color:#77728C;font-weight:900;
+      cursor:pointer;transition:.18s ease;
+    }
+    .nav-dot.active{background:var(--violet);color:white;box-shadow:0 8px 18px rgba(108,76,241,.22)}
+    .nav-dot.answered:not(.active){background:#E5FAF2;color:#12805B}
+
+    .math{
+      direction:ltr;
+      unicode-bidi:isolate;
+      display:inline-block;
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+
+    /* Force ratios to appear exactly as typed, even inside the Arabic RTL page. */
+    .ratio-exact{
+      direction:ltr !important;
+      unicode-bidi:isolate-override !important;
+      display:inline-block;
+      white-space:nowrap;
+      text-align:left;
+    }
+
+    .modal-backdrop{
+      position:fixed;inset:0;
+      z-index:40;
+      background:rgba(28,24,49,.56);
+      backdrop-filter:blur(6px);
+      display:grid;
+      place-items:center;
+      padding:16px;
+      opacity:0;
+      visibility:hidden;
+      transition:.25s ease;
+    }
+    .modal-backdrop.show{opacity:1;visibility:visible}
+    .result-modal{
+      width:min(760px,100%);
+      max-height:min(90vh,900px);
+      overflow:auto;
+      background:#fff;
+      border-radius:30px;
+      box-shadow:0 30px 90px rgba(17,13,42,.32);
+      transform:translateY(18px) scale(.96);
+      opacity:0;
+      transition:.3s cubic-bezier(.2,.9,.2,1);
+    }
+    .modal-backdrop.show .result-modal{transform:none;opacity:1}
+
+    .score-ring{
+      --score:0;
+      width:138px;height:138px;border-radius:50%;
+      background:conic-gradient(var(--violet) calc(var(--score)*1%), #EEEAF8 0);
+      display:grid;place-items:center;
+      position:relative;
+      flex:0 0 auto;
+      animation:pop .55s .08s both;
+    }
+    .score-ring::before{
+      content:"";
+      width:104px;height:104px;border-radius:50%;
+      background:#fff;position:absolute;
+    }
+    .score-center{position:relative;text-align:center;z-index:1}
+    .score-center strong{font-size:30px;line-height:1;display:block}
+
+    .stat{
+      border-radius:18px;
+      padding:13px 14px;
+      text-align:center;
+      border:1px solid #E8E5F2;
+      background:#FCFBFF;
+    }
+    .stat.good{background:#F0FBF6;border-color:#CDEFE0;color:#137B58}
+    .stat.bad{background:#FFF3F4;border-color:#F3D1D6;color:#C93C50}
+
+    .review-item{
+      border-radius:18px;
+      padding:14px 15px;
+      border:1px solid #E8E5F2;
+      background:#fff;
+    }
+    .review-item.good{border-color:#CDECDD;background:#F6FCF9}
+    .review-item.bad{border-color:#F0CDD2;background:#FFF7F8}
+
+    .whatsapp{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      border:none;
+      text-decoration:none;
+      border-radius:18px;
+      padding:15px 18px;
+      color:#fff;
+      background:linear-gradient(135deg,#20B966,#24D366);
+      box-shadow:0 14px 30px rgba(36,211,102,.25);
+      font-weight:900;
+      transition:.18s ease;
+    }
+    .whatsapp:hover{transform:translateY(-2px);box-shadow:0 18px 36px rgba(36,211,102,.31)}
+
+    #confetti{
+      position:fixed;inset:0;
+      width:100%;height:100%;
+      pointer-events:none;
+      z-index:60;
+    }
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:24px;
+      transform:translate(-50%,30px);
+      opacity:0;
+      visibility:hidden;
+      z-index:80;
+      background:#27233B;
+      color:#fff;
+      border-radius:14px;
+      padding:11px 16px;
+      box-shadow:0 12px 34px rgba(0,0,0,.22);
+      font-weight:700;
+      transition:.25s ease;
+      white-space:nowrap;
+      max-width:calc(100vw - 30px);
+    }
+    .toast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}
+
+    @media (max-width:640px){
+      .question-card{padding:18px;border-radius:23px}
+      .result-modal{border-radius:24px}
+      .navigator{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="blob one"></div>
+  <div class="blob two"></div>
+  <div class="blob three"></div>
+  <canvas id="confetti"></canvas>
+  <div id="toast" class="toast"></div>
+
+  <!-- ==================== ONBOARDING ==================== -->
+  <main id="onboarding" class="screen px-4 py-7 sm:py-10">
+    <div class="mx-auto max-w-3xl">
+      <div class="flex items-center justify-between mb-6 fade-up">
+        <div class="inline-flex items-center gap-2 rounded-full bg-white/85 px-4 py-2 text-sm font-bold text-violet-700 shadow-sm border border-white">
+          <span>✨</span>
+          <span>الصف الأول الإعدادي</span>
+        </div>
+        <button id="soundToggle1" class="sound-btn" aria-label="تشغيل أو إيقاف الصوت" title="الصوت">🔊</button>
+      </div>
+
+      <section class="glass rounded-[32px] p-5 sm:p-8 md:p-10 fade-up">
+        <div class="grid md:grid-cols-[1.05fr_.95fr] gap-8 items-center">
+          <div>
+            <div class="hero-orb mb-5">∑</div>
+            <p class="font-black text-violet-600 mb-2">جاهز للتحدّي؟ 🚀</p>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-black leading-[1.35] mb-4">
+              مغامرة
+              <span class="text-transparent bg-clip-text bg-gradient-to-l from-violet-600 to-fuchsia-500">الرياضيات</span>
+            </h1>
+            <p class="text-slate-600 leading-8 text-base sm:text-lg">
+              10 أسئلة قصيرة وممتعة.
+              حلّهم واحدًا تلو الآخر وشاهد نتيجتك فورًا.
+            </p>
+
+            <div class="grid grid-cols-3 gap-2 mt-6">
+              <div class="rounded-2xl bg-violet-50 p-3 text-center">
+                <div class="text-xl">🧠</div><div class="text-xs font-bold mt-1">10 أسئلة</div>
+              </div>
+              <div class="rounded-2xl bg-cyan-50 p-3 text-center">
+                <div class="text-xl">⚡</div><div class="text-xs font-bold mt-1">نتيجة فورية</div>
+              </div>
+              <div class="rounded-2xl bg-emerald-50 p-3 text-center">
+                <div class="text-xl">🏆</div><div class="text-xs font-bold mt-1">مراجعة كاملة</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-[26px] bg-white p-5 sm:p-6 border border-violet-100 shadow-soft">
+            <div class="mb-5">
+              <h2 class="text-xl font-black mb-1">بيانات الطالب</h2>
+              <p class="text-sm text-slate-500">اكتب بياناتك قبل بدء الامتحان.</p>
+            </div>
+
+            <div class="space-y-4">
+              <div>
+                <label for="studentName" class="block font-extrabold text-sm mb-2">الاسم الثلاثي *</label>
+                <input id="studentName" class="field" type="text" autocomplete="name" placeholder="مثال: أحمد محمد علي" />
+                <p id="nameHint" class="text-xs text-slate-400 mt-2">يجب كتابة ثلاثة أسماء على الأقل.</p>
+              </div>
+
+              <div>
+                <label for="studentClass" class="block font-extrabold text-sm mb-2">الفصل / الشعبة *</label>
+                <input id="studentClass" class="field" type="text" placeholder="مثال: 1/أ" />
+              </div>
+
+              <div id="onboardingError" class="hidden rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 p-3 text-sm font-bold"></div>
+
+              <button id="startBtn" class="main-btn mt-1" disabled>
+                ابدأ التحدّي
+                <span class="mr-2">🚀</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <p class="text-center text-xs text-slate-400 mt-5">
+        لن يبدأ الامتحان قبل استكمال الاسم الثلاثي والفصل.
+      </p>
+    </div>
+  </main>
+
+  <!-- ==================== QUIZ ==================== -->
+  <main id="quizScreen" class="hidden min-h-screen px-4 py-5 sm:py-8">
+    <div class="mx-auto max-w-4xl">
+      <header class="glass rounded-[24px] p-4 sm:p-5 mb-5 sticky top-3 z-20">
+        <div class="flex items-center justify-between gap-3 mb-4">
+          <div class="min-w-0">
+            <div class="text-xs text-slate-500 mb-1">مغامرة الرياضيات</div>
+            <div id="studentMini" class="font-black truncate"></div>
+          </div>
+          <button id="soundToggle2" class="sound-btn flex-none" aria-label="تشغيل أو إيقاف الصوت">🔊</button>
+        </div>
+
+        <div class="flex items-center justify-between text-xs font-bold text-slate-500 mb-2">
+          <span id="progressLabel">السؤال 1 من 10</span>
+          <span id="answeredLabel">تمت الإجابة عن 0/10</span>
+        </div>
+        <div class="progress-shell">
+          <div id="progressBar" class="progress-bar"></div>
+        </div>
+      </header>
+
+      <section id="questionArea" class="question-card fade-up"></section>
+
+      <section class="glass rounded-[24px] p-4 mt-5">
+        <div class="text-xs font-bold text-slate-500 mb-3">تقدّم الأسئلة</div>
+        <div id="navigator" class="navigator"></div>
+      </section>
+
+      <div class="grid grid-cols-2 gap-3 mt-5">
+        <button id="prevBtn" class="secondary-btn">🔒 لا يمكن الرجوع</button>
+        <button id="nextBtn" class="secondary-btn">التالي ←</button>
+      </div>
+
+      <div class="glass rounded-[24px] p-4 mt-5">
+        <button id="submitBtn" class="main-btn" disabled>
+          إرسال الإجابات وإظهار النتيجة
+          <span class="mr-2">🎯</span>
+        </button>
+        <p id="submitHint" class="text-center text-xs text-slate-400 mt-3">
+          بعد اختيار إجابة لا يمكن الرجوع للسؤال أو تغيير الإجابة.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==================== RESULT MODAL ==================== -->
+  <div id="resultBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
+    <div class="result-modal">
+      <div class="p-5 sm:p-7">
+        <div class="flex items-start justify-between gap-4 mb-5">
+          <div>
+            <div class="inline-flex items-center gap-2 rounded-full bg-violet-50 text-violet-700 px-3 py-1.5 text-xs font-black mb-3">
+              🏆 تم التصحيح
+            </div>
+            <h2 id="resultTitle" class="text-2xl sm:text-3xl font-black">نتيجتك جاهزة!</h2>
+            <p id="resultStudent" class="text-slate-500 mt-1"></p>
+          </div>
+          <button id="closeResult" class="sound-btn" aria-label="إغلاق">✕</button>
+        </div>
+
+        <div class="grid sm:grid-cols-[auto_1fr] gap-5 items-center mb-6">
+          <div id="scoreRing" class="score-ring mx-auto sm:mx-0">
+            <div class="score-center">
+              <strong id="scorePercent">0%</strong>
+              <span id="scoreFraction" class="text-xs text-slate-500 font-bold">0/10</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div class="stat good">
+              <div class="text-2xl font-black" id="correctCount">0</div>
+              <div class="text-xs font-bold">إجابات صحيحة</div>
+            </div>
+            <div class="stat bad">
+              <div class="text-2xl font-black" id="wrongCount">0</div>
+              <div class="text-xs font-bold">إجابات خاطئة</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="resultMessage" class="rounded-2xl bg-amber-50 border border-amber-200 p-4 text-amber-800 font-bold mb-6"></div>
+
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-black text-lg">مراجعة الإجابات</h3>
+          <span class="text-xs text-slate-400">الصحيح والخطأ</span>
+        </div>
+        <div id="reviewList" class="space-y-3"></div>
+
+        <div class="mt-6 space-y-3">
+          <a id="whatsappBtn" class="whatsapp" href="#" target="_blank" rel="noopener">
+            <span class="text-xl">💬</span>
+            <span>إرسال النتيجة إلى ميس أسماء عبر الواتساب</span>
+          </a>
+          <button id="copyBtn" class="secondary-btn w-full">نسخ ملخص النتيجة</button>
+        </div>
+
+        <p class="text-[11px] leading-5 text-slate-400 mt-4 text-center">
+          سيتم فتح WhatsApp برسالة مجهزة مسبقًا إلى ميس أسماء على الرقم +20 127 606 8167،
+          ثم يضغط الطالب على إرسال داخل WhatsApp.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================
+       DATA — transcribed from the two uploaded exam images
+       ========================================================= */
+    const QUESTIONS = [
+      {
+        text: `الطول في الرسم <span class="math">8 cm</span> والطول الحقيقي <span class="math">32 m</span>، فإن مقياس الرسم هو:`,
+        plain: 'الطول في الرسم 8 سم والطول الحقيقي 32 مترًا، فإن مقياس الرسم هو:',
+        options: ['1 : 40','1 : 400','1 : 4000','1 : 4'],
+        answer: '1 : 400',
+        explanation: '32 مترًا = 3200 سم، لذلك مقياس الرسم يساوي واحدًا إلى أربعمائة.'
+      },
+      {
+        text: `إذا قُسِّم مبلغ <span class="math">120</span> جنيهًا بين شخصين بنسبة <span class="math">1 : 2</span>، فإن نصيب الأصغر يساوي:`,
+        plain: 'إذا قسم مبلغ 120 جنيهًا بين شخصين بنسبة 1 : 2، فإن نصيب الأصغر يساوي:',
+        options: ['40','120','80','240'],
+        answer: '40',
+        explanation: 'مجموع أجزاء النسبة = 3، وقيمة الجزء الواحد = 120 ÷ 3 = 40 جنيهًا.'
+      },
+      {
+        text: `النسبة بين عددين <span class="math">3 : 4</span>، وكان العدد الأكبر <span class="math">20</span>، فإن العدد الأصغر يساوي:`,
+        plain: 'النسبة بين عددين 3 : 4، وكان العدد الأكبر 20، فإن العدد الأصغر يساوي:',
+        options: ['8','21','15','10'],
+        answer: '15',
+        explanation: '4 أجزاء = 20، إذن الجزء = 5، والعدد الأصغر = 3 × 5 = 15.'
+      },
+      {
+        text: `النسبة بين أطوال أضلاع مثلث <span class="math">3 : 5 : 7</span> ومحيطه <span class="math">150 cm</span>، فإن الضلع الأصغر يساوي:`,
+        plain: 'النسبة بين أطوال أضلاع مثلث 3 : 5 : 7 ومحيطه 150 سم، فإن الضلع الأصغر يساوي:',
+        options: ['70','50','30','100'],
+        answer: '30',
+        explanation: 'مجموع النسب = 15، وقيمة الجزء = 150 ÷ 15 = 10، والضلع الأصغر = 3 × 10 = 30 سم.'
+      },
+      {
+        text: `ألوان علم مصر تعتبر:`,
+        plain: 'ألوان علم مصر تعتبر:',
+        options: ['مجموعة','ليست مجموعة','غير ذلك','جميع ما سبق'],
+        answer: 'مجموعة',
+        explanation: 'ألوان علم مصر عناصر محددة وواضحة، ولذلك تمثل مجموعة.'
+      },
+      {
+        text: `اشترى رجل بضاعة بمبلغ <span class="math">3000</span> جنيه وباعها بربح <span class="math">10%</span>، فإن السعر بعد إضافة الربح يساوي:`,
+        plain: 'اشترى رجل بضاعة بمبلغ 3000 جنيه وباعها بربح 10%، فإن السعر بعد إضافة الربح يساوي:',
+        options: ['3200','3300','2300','1500'],
+        answer: '3300',
+        explanation: 'الربح = 10% من 3000 = 300 جنيه، والسعر بعد الربح = 3300 جنيه.'
+      },
+      {
+        text: `تساوي نسبتين أو أكثر يُسمّى:`,
+        plain: 'تساوي نسبتين أو أكثر يسمى:',
+        options: ['نسبة','تناسب','مقياس الرسم','غير ذلك'],
+        answer: 'تناسب',
+        explanation: 'التناسب يعني تساوي نسبتين.'
+      },
+      {
+        text: `إذا كانت <span class="math">100 g</span> من الشيكولاتة تعطي <span class="math">300</span> سعر حراري، فأوجد السعرات الحرارية في <span class="math">30 g</span> من نفس النوع:`,
+        plain: 'إذا كانت 100 جم من الشيكولاتة تعطي 300 سعر حراري، فأوجد السعرات الحرارية في 30 جرامًا من نفس النوع:',
+        options: ['9','90','900','9000'],
+        answer: '90',
+        explanation: '300 × 30 ÷ 100 = 90 سعرًا حراريًا.'
+      },
+      {
+        text: `مقياس الرسم <span class="math">1 : 200</span> يدل على:`,
+        plain: 'مقياس الرسم 1 : 200 يدل على:',
+        options: ['تكبير','تصغير','غير ذلك','جميع ما سبق'],
+        answer: 'تصغير',
+        explanation: 'كل وحدة على الرسم تقابل 200 وحدة في الحقيقة، لذلك الرسم مصغر.'
+      },
+      {
+        text: `تليفزيون سعره <span class="math">12000</span> جنيه، تم عمل خصم عليه بمعدل <span class="math">20%</span>، فإن سعره بعد التخفيض يساوي:`,
+        plain: 'تليفزيون سعره 12000 جنيه، تم عمل خصم عليه بمعدل 20%، فإن سعره بعد التخفيض يساوي:',
+        options: ['9600','1296','120','2400'],
+        answer: '9600',
+        explanation: 'الخصم = 20% من 12000 = 2400 جنيه، والسعر بعد التخفيض = 12000 − 2400 = 9600 جنيه.'
+      }
+    ];
+
+    const WHATSAPP_NUMBER = '201276068167';
+
+    /* =========================================================
+       APP STATE
+       ========================================================= */
+    const state = {
+      current: 0,
+      answers: Array(QUESTIONS.length).fill(null),
+      studentName: '',
+      studentClass: '',
+      sound: true,
+      submitted: false
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    const onboarding = $('onboarding');
+    const quizScreen = $('quizScreen');
+    const studentName = $('studentName');
+    const studentClass = $('studentClass');
+    const startBtn = $('startBtn');
+    const onboardingError = $('onboardingError');
+    const questionArea = $('questionArea');
+    const navigatorEl = $('navigator');
+    const prevBtn = $('prevBtn');
+    const nextBtn = $('nextBtn');
+    const submitBtn = $('submitBtn');
+    const progressBar = $('progressBar');
+    const progressLabel = $('progressLabel');
+    const answeredLabel = $('answeredLabel');
+    const studentMini = $('studentMini');
+    const resultBackdrop = $('resultBackdrop');
+    const closeResult = $('closeResult');
+    const scoreRing = $('scoreRing');
+    const whatsappBtn = $('whatsappBtn');
+    const copyBtn = $('copyBtn');
+
+    /* =========================================================
+       HELPERS
+       ========================================================= */
+    function cleanText(v){
+      return v.trim().replace(/\s+/g,' ');
+    }
+
+    function isTripleName(v){
+      return cleanText(v).split(' ').filter(Boolean).length >= 3;
+    }
+
+    function answeredCount(){
+      return state.answers.filter(Boolean).length;
+    }
+
+    function allAnswered(){
+      return answeredCount() === QUESTIONS.length;
+    }
+
+    function escapeHtml(value){
+      return String(value)
+        .replaceAll('&','&amp;')
+        .replaceAll('<','&lt;')
+        .replaceAll('>','&gt;')
+        .replaceAll('"','&quot;')
+        .replaceAll("'","&#039;");
+    }
+
+    function isMostlyLatinNumber(text){
+      return /^[\d\s:%.,+\-×÷]+$/.test(text);
+    }
+
+    function formatAnswerValue(value){
+      const safe = escapeHtml(value);
+      return isMostlyLatinNumber(value)
+        ? `<bdi dir="ltr" class="ratio-exact">${safe}</bdi>`
+        : safe;
+    }
+
+    function showToast(message){
+      const t = $('toast');
+      t.textContent = message;
+      t.classList.add('show');
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => t.classList.remove('show'), 1800);
+    }
+
+    /* =========================================================
+       SOUND — Web Audio API, no external sound files
+       ========================================================= */
+    let audioCtx = null;
+
+    function tone(freq=520, duration=.06, type='sine', volume=.035){
+      if(!state.sound) return;
+      try{
+        audioCtx ||= new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        gain.gain.value = volume;
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(.0001, audioCtx.currentTime + duration);
+        osc.stop(audioCtx.currentTime + duration);
+      }catch(e){}
+    }
+
+    function celebrateSound(){
+      if(!state.sound) return;
+      [523,659,784,1046].forEach((f,i)=>setTimeout(()=>tone(f,.13,'sine',.04), i*90));
+    }
+
+    function updateSoundButtons(){
+      const icon = state.sound ? '🔊' : '🔇';
+      $('soundToggle1').textContent = icon;
+      $('soundToggle2').textContent = icon;
+    }
+
+    [$('soundToggle1'), $('soundToggle2')].forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        state.sound = !state.sound;
+        updateSoundButtons();
+        if(state.sound) tone(620,.07);
+      });
+    });
+
+    /* =========================================================
+       ONBOARDING
+       ========================================================= */
+    function validateOnboarding(){
+      const nameOk = isTripleName(studentName.value);
+      const classOk = cleanText(studentClass.value).length > 0;
+      startBtn.disabled = !(nameOk && classOk);
+
+      $('nameHint').className = nameOk
+        ? 'text-xs text-emerald-600 mt-2 font-bold'
+        : 'text-xs text-slate-400 mt-2';
+
+      $('nameHint').textContent = nameOk
+        ? '✓ الاسم الثلاثي مكتمل'
+        : 'يجب كتابة ثلاثة أسماء على الأقل.';
+    }
+
+    studentName.addEventListener('input', validateOnboarding);
+    studentClass.addEventListener('input', validateOnboarding);
+
+    startBtn.addEventListener('click', ()=>{
+      const name = cleanText(studentName.value);
+      const cls = cleanText(studentClass.value);
+
+      if(!isTripleName(name) || !cls){
+        onboardingError.textContent = 'من فضلك أكمل الاسم الثلاثي والفصل أولًا.';
+        onboardingError.classList.remove('hidden');
+        onboardingError.classList.add('shake');
+        setTimeout(()=>onboardingError.classList.remove('shake'), 400);
+        tone(190,.12,'square',.025);
+        return;
+      }
+
+      state.studentName = name;
+      state.studentClass = cls;
+      onboardingError.classList.add('hidden');
+      tone(720,.08);
+
+      studentMini.textContent = `${state.studentName} • ${state.studentClass}`;
+
+      onboarding.classList.add('hidden');
+      quizScreen.classList.remove('hidden');
+      renderNavigator();
+      renderQuestion();
+      updateProgress();
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+
+    /* =========================================================
+       QUIZ RENDER
+       ========================================================= */
+    function renderQuestion(){
+      const q = QUESTIONS[state.current];
+      const selected = state.answers[state.current];
+
+      questionArea.classList.remove('fade-up');
+      void questionArea.offsetWidth;
+      questionArea.classList.add('fade-up');
+
+      const optionsHtml = q.options.map((opt, idx)=>{
+        const isSelected = selected === opt;
+        const letter = ['أ','ب','ج','د'][idx];
+        return `
+          <button type="button"
+            class="option ${isSelected ? 'selected' : ''}"
+            data-value="${escapeHtml(opt)}"
+            aria-pressed="${isSelected ? 'true' : 'false'}">
+            <span class="dot"></span>
+            <span class="w-7 h-7 rounded-lg bg-slate-50 border border-slate-200 grid place-items-center text-xs font-black text-slate-500 flex-none">${letter}</span>
+            <span class="font-extrabold text-right flex-1 ${isMostlyLatinNumber(opt) ? 'math' : ''}">
+              ${formatAnswerValue(opt)}
+            </span>
+          </button>
+        `;
+      }).join('');
+
+      questionArea.innerHTML = `
+        <div class="flex items-start gap-3 sm:gap-4 mb-5">
+          <div class="q-icon">${state.current + 1}</div>
+          <div class="min-w-0">
+            <div class="text-xs font-black text-violet-600 mb-1">اختر الإجابة الصحيحة</div>
+            <h2 class="text-lg sm:text-xl md:text-2xl leading-9 font-black">${q.text}</h2>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-3">
+          ${optionsHtml}
+        </div>
+      `;
+
+      questionArea.querySelectorAll('.option').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          if(state.submitted) return;
+
+          // يمنع تغيير الإجابة بعد اعتمادها.
+          if(state.answers[state.current] !== null){
+            showToast('تم اعتماد إجابة هذا السؤال ولا يمكن تغييرها.');
+            tone(190,.09,'square',.02);
+            return;
+          }
+
+          state.answers[state.current] = btn.dataset.value;
+          tone(560,.055,'sine',.028);
+          renderNavigator();
+          updateProgress();
+
+          // انتقال تلقائي للسؤال التالي بعد تثبيت الإجابة.
+          if(state.current < QUESTIONS.length - 1){
+            setTimeout(()=>{
+              state.current++;
+              renderQuestion();
+              window.scrollTo({top:0, behavior:'smooth'});
+            }, 320);
+          } else {
+            renderQuestion();
+            showToast('تمت إجابة آخر سؤال. يمكنك إرسال الاختبار الآن.');
+          }
+        });
+      });
+
+      // الامتحان خطّي: لا يمكن الرجوع للسؤال السابق.
+      prevBtn.disabled = true;
+      prevBtn.style.opacity = '.38';
+      prevBtn.style.cursor = 'not-allowed';
+
+      // الانتقال التالي متاح فقط إذا تم اعتماد إجابة السؤال الحالي.
+      nextBtn.disabled = state.current === QUESTIONS.length - 1 || state.answers[state.current] === null;
+      nextBtn.style.opacity = nextBtn.disabled ? '.45' : '1';
+
+      progressLabel.textContent = `السؤال ${state.current + 1} من ${QUESTIONS.length}`;
+      renderNavigator();
+    }
+
+    function renderNavigator(){
+      navigatorEl.innerHTML = QUESTIONS.map((_,i)=>{
+        const active = i === state.current;
+        const answered = state.answers[i] !== null;
+        const locked = answered && i !== state.current;
+        const future = i > state.current;
+
+        return `
+          <button
+            type="button"
+            class="nav-dot ${active?'active':''} ${answered?'answered':''}"
+            data-i="${i}"
+            ${locked || future ? 'disabled' : ''}
+            style="${locked || future ? 'opacity:.58;cursor:not-allowed;' : ''}"
+            title="${locked ? 'تم اعتماد الإجابة' : future ? 'أجب عن السؤال الحالي أولًا' : 'السؤال الحالي'}">
+            ${answered ? '🔒' : i+1}
+          </button>
+        `;
+      }).join('');
+
+      navigatorEl.querySelectorAll('.nav-dot').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          if(btn.disabled) return;
+          const target = Number(btn.dataset.i);
+
+          // لا يسمح بالرجوع لأي سؤال تمت إجابته.
+          if(target < state.current || state.answers[target] !== null){
+            showToast('لا يمكن الرجوع إلى سؤال تمت إجابته.');
+            return;
+          }
+
+          state.current = target;
+          tone(440,.045);
+          renderQuestion();
+          window.scrollTo({top:0, behavior:'smooth'});
+        });
+      });
+    }
+
+    function updateProgress(){
+      const count = answeredCount();
+      const pct = Math.round(count / QUESTIONS.length * 100);
+      progressBar.style.width = `${pct}%`;
+      answeredLabel.textContent = `تمت الإجابة عن ${count}/${QUESTIONS.length}`;
+      submitBtn.disabled = !allAnswered();
+      $('submitHint').textContent = allAnswered()
+        ? 'أحسنت! جميع الأسئلة مجابة. يمكنك الإرسال الآن 🎉'
+        : `باقي ${QUESTIONS.length - count} سؤال لتفعيل زر الإرسال.`;
+    }
+
+    prevBtn.addEventListener('click', ()=>{
+      showToast('لا يمكن الرجوع إلى الأسئلة السابقة بعد الإجابة.');
+      tone(190,.08,'square',.018);
+    });
+
+    nextBtn.addEventListener('click', ()=>{
+      if(state.answers[state.current] === null){
+        showToast('اختر إجابة أولًا.');
+        return;
+      }
+      if(state.current < QUESTIONS.length - 1){
+        state.current++;
+        tone(500,.045);
+        renderQuestion();
+        window.scrollTo({top:0, behavior:'smooth'});
+      }
+    });
+
+    /* =========================================================
+       SUBMISSION + GRADING
+       ========================================================= */
+    submitBtn.addEventListener('click', ()=>{
+      // Mandatory student registration check, even if someone manipulates the UI.
+      if(!isTripleName(state.studentName) || !state.studentClass){
+        showToast('بيانات الطالب غير مكتملة.');
+        return;
+      }
+
+      if(!allAnswered()){
+        const firstMissing = state.answers.findIndex(a=>!a);
+        state.current = firstMissing;
+        renderQuestion();
+        updateProgress();
+        tone(180,.12,'square',.025);
+        showToast(`أجب عن السؤال رقم ${firstMissing + 1} أولًا.`);
+        return;
+      }
+
+      state.submitted = true;
+      const result = gradeQuiz();
+      renderResult(result);
+      resultBackdrop.classList.add('show');
+      document.body.style.overflow = 'hidden';
+      confettiBurst();
+      celebrateSound();
+    });
+
+    function gradeQuiz(){
+      let correct = 0;
+      const details = QUESTIONS.map((q,i)=>{
+        const selected = state.answers[i];
+        const ok = selected === q.answer;
+        if(ok) correct++;
+        return { ...q, selected, ok, index:i };
+      });
+      return {
+        correct,
+        wrong: QUESTIONS.length - correct,
+        score: correct,
+        total: QUESTIONS.length,
+        percent: Math.round(correct / QUESTIONS.length * 100),
+        details
+      };
+    }
+
+    function resultPhrase(percent){
+      if(percent === 100) return 'ممتاز جدًا! إجابة كاملة… بطل الرياضيات 👑';
+      if(percent >= 80) return 'رائع! أداء قوي جدًا، استمر بهذا المستوى 🌟';
+      if(percent >= 60) return 'أداء جيد! راجع الأخطاء وستصل للأفضل بسرعة 💪';
+      return 'بداية جيدة. راجع الحلول خطوة بخطوة وحاول مرة أخرى 📚';
+    }
+
+    function renderResult(result){
+      $('scorePercent').textContent = `${result.percent}%`;
+      $('scoreFraction').textContent = `${result.score}/${result.total}`;
+      $('correctCount').textContent = result.correct;
+      $('wrongCount').textContent = result.wrong;
+      $('resultStudent').textContent = `${state.studentName} • الفصل ${state.studentClass}`;
+      $('resultMessage').textContent = resultPhrase(result.percent);
+
+      // Animate the circular score.
+      scoreRing.style.setProperty('--score', '0');
+      requestAnimationFrame(()=>{
+        setTimeout(()=>scoreRing.style.setProperty('--score', result.percent), 120);
+      });
+
+      $('reviewList').innerHTML = result.details.map(item=>`
+        <div class="review-item ${item.ok ? 'good' : 'bad'}">
+          <div class="flex items-start justify-between gap-3">
+            <div class="font-black text-sm leading-7">س${item.index+1}: ${escapeHtml(item.plain)}</div>
+            <span class="flex-none text-lg">${item.ok ? '✅' : '❌'}</span>
+          </div>
+          <div class="mt-2 text-sm">
+            <div><span class="font-bold text-slate-500">إجابتك:</span> <span class="font-black ${item.ok?'text-emerald-700':'text-rose-700'}">${formatAnswerValue(item.selected)}</span></div>
+            ${item.ok ? '' : `<div><span class="font-bold text-slate-500">الإجابة الصحيحة:</span> <span class="font-black text-emerald-700">${formatAnswerValue(item.answer)}</span></div>`}
+            <div class="mt-1 text-xs text-slate-500 leading-6"><span class="font-bold">التفسير:</span> ${escapeHtml(item.explanation)}</div>
+          </div>
+        </div>
+      `).join('');
+
+      const message = buildWhatsAppMessage(result);
+      whatsappBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+
+      copyBtn.onclick = async ()=>{
+        try{
+          await navigator.clipboard.writeText(message);
+          showToast('تم نسخ ملخص النتيجة ✓');
+          tone(660,.06);
+        }catch(e){
+          showToast('تعذر النسخ تلقائيًا على هذا المتصفح.');
+        }
+      };
+    }
+
+    function buildWhatsAppMessage(result){
+      const marks = result.details.map(d => `${d.index+1}-${d.ok?'صحيح':'خطأ'}`).join(' | ');
+      return [
+        'نتيجة اختبار الرياضيات - الصف الأول الإعدادي',
+        `الاسم: ${state.studentName}`,
+        `الفصل: ${state.studentClass}`,
+        `الدرجة: ${result.score}/${result.total}`,
+        `النسبة: ${result.percent}%`,
+        `الإجابات الصحيحة: ${result.correct}`,
+        `الإجابات الخاطئة: ${result.wrong}`,
+        '',
+        `تفاصيل الأسئلة: ${marks}`
+      ].join('\n');
+    }
+
+    closeResult.addEventListener('click', ()=>{
+      resultBackdrop.classList.remove('show');
+      document.body.style.overflow = '';
+    });
+
+    resultBackdrop.addEventListener('click', (e)=>{
+      if(e.target === resultBackdrop){
+        resultBackdrop.classList.remove('show');
+        document.body.style.overflow = '';
+      }
+    });
+
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape' && resultBackdrop.classList.contains('show')){
+        resultBackdrop.classList.remove('show');
+        document.body.style.overflow = '';
+      }
+    });
+
+    /* =========================================================
+       CONFETTI — lightweight canvas animation
+       ========================================================= */
+    const canvas = $('confetti');
+    const ctx = canvas.getContext('2d');
+    let pieces = [];
+    let raf = null;
+
+    function resizeCanvas(){
+      const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      canvas.width = innerWidth * dpr;
+      canvas.height = innerHeight * dpr;
+      canvas.style.width = innerWidth + 'px';
+      canvas.style.height = innerHeight + 'px';
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function confettiBurst(){
+      const colors = ['#6C4CF1','#27C8E8','#35D6A0','#FFD75A','#FF6FAE','#FF8B4B'];
+      pieces = Array.from({length:140}, ()=>({
+        x: innerWidth/2 + (Math.random()-.5)*100,
+        y: innerHeight*.18 + (Math.random()-.5)*20,
+        vx: (Math.random()-.5)*8,
+        vy: Math.random()*-7 - 4,
+        g: .16 + Math.random()*.08,
+        r: 3 + Math.random()*5,
+        rot: Math.random()*Math.PI,
+        vr: (Math.random()-.5)*.25,
+        color: colors[(Math.random()*colors.length)|0],
+        life: 120 + Math.random()*70
+      }));
+      if(raf) cancelAnimationFrame(raf);
+      animateConfetti();
+    }
+
+    function animateConfetti(){
+      ctx.clearRect(0,0,innerWidth,innerHeight);
+      let alive = false;
+
+      for(const p of pieces){
+        if(p.life <= 0) continue;
+        alive = true;
+        p.life--;
+        p.vy += p.g;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.vr;
+
+        ctx.save();
+        ctx.translate(p.x,p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.r,-p.r*.55,p.r*2,p.r*1.1);
+        ctx.restore();
+      }
+
+      if(alive) raf = requestAnimationFrame(animateConfetti);
+      else ctx.clearRect(0,0,innerWidth,innerHeight);
+    }
+
+    /* Initial validation */
+    validateOnboarding();
+    updateSoundButtons();
+  </script>
+</body>
+</html>
